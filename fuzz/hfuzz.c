@@ -47,13 +47,25 @@ static void fork_server(void) {
 
 extern void hfuzzInstrumentInit(void);
 
+abi_ulong hfuzz_qemu_persist_start = 0;
+abi_ulong hfuzz_qemu_persist_end = 0;
+
 void hfuzz_qemu_setup(void) {
+  char *env_var = NULL;
   rcu_disable_atfork();
   hfuzzInstrumentInit();
 
   if (getenv("HFUZZ_INST_LIBS")) {
     hfuzz_qemu_start_code = 0;
     hfuzz_qemu_end_code   = (abi_ulong)-1;
+  }
+  env_var = getenv("HFUZZ_PERSIST_START");
+  if (env_var) {
+    hfuzz_qemu_persist_start = strtol(env_var, NULL, 0);
+  }
+  env_var = getenv("HFUZZ_PERSIST_END");
+  if (env_var) {
+      hfuzz_qemu_persist_end = strtol(env_var, NULL, 0);
   }
 
 #ifdef HFUZZ_FORKSERVER
@@ -75,4 +87,3 @@ void HELPER(hfuzz_qemu_trace_cmp_i32)(
     ) {
   hfuzz_trace_cmp4(cur_loc, arg1, arg2);
 }
-

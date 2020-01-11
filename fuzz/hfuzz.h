@@ -6,6 +6,8 @@
 extern abi_ulong hfuzz_qemu_entry_point;
 extern abi_ulong hfuzz_qemu_start_code;
 extern abi_ulong hfuzz_qemu_end_code;
+extern abi_ulong hfuzz_qemu_persist_start;
+extern abi_ulong hfuzz_qemu_persist_end;
 
 extern void hfuzz_qemu_setup(void);
 
